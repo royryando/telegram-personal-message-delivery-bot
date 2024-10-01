@@ -1,0 +1,23 @@
+services:
+  telegram-personal-message-delivery:
+    image: telegram-personal-message-delivery:latest
+    build:
+      context: .
+    environment:
+      SERVER_PORT: 8101
+      BOT_TOKEN: xx
+      BOT_NAME: Personal Message Delivery Bot
+      BOT_USERNAME: personal_message_delivery_bot
+      AUTH_USERNAME: user
+      AUTH_PASSWORD: password
+      DATASOURCE_URL: jdbc:postgresql://localhost:54393/telegram_bot
+      DATASOURCE_USERNAME: pguser
+      DATASOURCE_PASSWORD: pgpass
+    ports:
+      - "8101:8101"
+    networks:
+      - telegram-bot-network
+
+networks:
+  telegram-bot-network:
+    driver: bridge
