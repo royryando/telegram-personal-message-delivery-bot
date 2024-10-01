@@ -28,6 +28,7 @@ public class TelegramBotServiceImpl implements TelegramBotService {
     @Override
     public Chat saveChat(Message message) {
         var check = chatRepository.findFirstByTelegramId(message.getChatId());
+        System.out.println(check.isPresent());
         if (check.isPresent()) return check.get();
 
         var chat = Chat.builder()
@@ -70,7 +71,7 @@ public class TelegramBotServiceImpl implements TelegramBotService {
         if (!checkIsAdmin(message)) return;
         String text = message.getText();
         var payload = text.split("/registerChannel ");
-        if (payload.length > 0) {
+        if (payload.length > 1) {
             String channelId = payload[1];
             var chat = chatRepository.findFirstByTelegramId(message.getChatId()).orElse(saveChat(message));
             chat.setChannelId(channelId);
@@ -186,7 +187,7 @@ public class TelegramBotServiceImpl implements TelegramBotService {
                         %s
                         """,
                 message.getChat().getType().equals("group") ? "Group" : "Chat",
-                message.getChat().getType().equals("group") ? "*Only Group Admin can link/revoke a channel" : ""
+                message.getChat().getType().equals("group") ? "*Only Group Admin can link/revoke a channel*" : ""
         );
         SendMessage sendMessage = new SendMessage(String.valueOf(message.getChatId()), textMessage);
         sendMessage.enableMarkdown(true);
